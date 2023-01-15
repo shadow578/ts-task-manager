@@ -1,37 +1,65 @@
+import { AppBar, Paper, Typography } from '@mui/material';
 import { Component, ReactNode } from 'react';
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface Props { }
+import type { ProcessInfo } from '../../main/binding/model/ProcessInfo';
+import LoadingIndicator from './LoadingIndicator';
+import ProcessList from './ProcessList';
+import ThemeWrapper from './ThemeWrapper';
+import TopBar from './TopBar';
 
 interface State {
-    count: number;
-    nodeVersion: string;
+  processes: ProcessInfo[];
+  darkMode: boolean;
 }
 
-export default class App extends Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-        this.state = {
-            count: 0,
-            nodeVersion: 'N/A',
-        };
-    }
+export default class App extends Component<Record<string, never>, State> {
+  constructor(props: Record<string, never>) {
+    super(props);
+    this.state = {
+      processes: [],
+      darkMode: true,
+    };
+  }
 
-    async componentDidMount() {
-        this.setState({
-            nodeVersion: versions.getVersions().node,
-        });
-    }
+  componentDidMount() {
+    this.refresh();
+  }
 
-    render(): ReactNode {
-        return (
-            <div>
-                <h1>Hello World</h1>
-                <p>Running Node.js version {this.state.nodeVersion}</p>
+  private async refresh() {
+    console.time('refresh');
+    this.setState({
+      processes: await processManagement.getAllProcesses(),
+    });
+    console.timeEnd('refresh');
 
-                <p>Count: {this.state.count}</p>
-                <button onClick={() => this.setState({ count: this.state.count + 1 })}>Increment</button>
-            </div>
-        );
+    setTimeout(() => {
+      this.refresh();
+    }, 1000);
+  }
+
+  private async kill(process: ProcessInfo) {
+    if (confirm(`Are you sure you want to kill process ${process.ProcessName} with pid ${process.Id}?`)) {
+      await processManagement.killProcess(process.Id);
+      this.setState({
+        processes: this.state.processes.filter((p) => p.Id !== process.Id),
+      });
     }
+  }
+
+  render(): ReactNode {
+    return (
+      <ThemeWrapper darkMode={this.state.darkMode}>
+        <TopBar
+          title="Task Manager"
+          darkMode={this.state.darkMode}
+          toggleDarkMode={() => this.setState({ darkMode: !this.state.darkMode })}
+        />
+
+        {this.state.processes.length === 0 ? (
+          <LoadingIndicator text="Loading processes..." />
+        ) : (
+          <ProcessList processes={this.state.processes} killCallback={async (process) => await this.kill(process)} />
+        )}
+      </ThemeWrapper>
+    );
+  }
 }

@@ -16,6 +16,7 @@ export class ProcessManagementBinding extends PowerShellBinding {
   @PS(
     'Get-Process | Select-Object Id, ProcessName, Path, FileVersion, Product, Description, Company, MainWindowTitle, CPU, WorkingSet, WorkingSet64, HasExited, Responding | Write-Output',
     matchArray<ProcessInfo>(isProcessInfo),
+    { serializationDepth: 1 },
   )
   getAllProcesses() {
     return psCall<ProcessInfo[]>();
@@ -30,6 +31,7 @@ export class ProcessManagementBinding extends PowerShellBinding {
   @PS(
     'Get-Process -Id ($pids) | Select-Object Id, ProcessName, Path, FileVersion, Product, Description, Company, MainWindowTitle, CPU, WorkingSet, WorkingSet64, HasExited, Responding | Write-Output',
     matchArray<ProcessInfo>(isProcessInfo),
+    { serializationDepth: 1 },
   )
   getProcessess(pids: number[]) {
     return psCall<ProcessInfo[]>();

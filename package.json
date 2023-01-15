@@ -41,6 +41,10 @@
     "typescript": "~4.5.4"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/material": "^5.11.4",
     "@shadow578/powershell-binding": "^1.0.0",
     "@shadow578/type-guardian": "^1.1.0",
     "electron-squirrel-startup": "^1.0.0",
