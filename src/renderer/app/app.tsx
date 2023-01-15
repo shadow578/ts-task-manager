@@ -1,4 +1,3 @@
-import { AppBar, Paper, Typography } from '@mui/material';
 import { Component, ReactNode } from 'react';
 import type { ProcessInfo } from '../../main/binding/model/ProcessInfo';
 import LoadingIndicator from './LoadingIndicator';
@@ -38,10 +37,10 @@ export default class App extends Component<Record<string, never>, State> {
 
   private async kill(process: ProcessInfo) {
     if (confirm(`Are you sure you want to kill process ${process.ProcessName} with pid ${process.Id}?`)) {
-      await processManagement.killProcess(process.Id);
       this.setState({
         processes: this.state.processes.filter((p) => p.Id !== process.Id),
       });
+      await processManagement.killProcess(process.Id);
     }
   }
 

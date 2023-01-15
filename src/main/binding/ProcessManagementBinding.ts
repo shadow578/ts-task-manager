@@ -36,14 +36,4 @@ export class ProcessManagementBinding extends PowerShellBinding {
   getProcessess(pids: number[]) {
     return psCall<ProcessInfo[]>();
   }
-
-  /**
-   * kill a process by PID
-   *
-   * @param pid the process id to kill
-   */
-  @PS('Stop-Process -Id $params.pid', isVoid, { expandParameters: false })
-  killProcess(pid: number) {
-    return psCall<void>();
-  }
 }
