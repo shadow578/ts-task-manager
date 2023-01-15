@@ -1,35 +1,25 @@
-import { StrictMode, Component, ReactNode } from "react";
-import * as ReactDOM from 'react-dom';
-
-export function render() {
-    ReactDOM.render((
-        <StrictMode>
-            <App />
-        </StrictMode>
-    ), document.body);
-
-}
+import { Component, ReactNode } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface Props { }
 
 interface State {
-    count: number,
+    count: number;
     nodeVersion: string;
 }
 
-class App extends Component<Props, State> {
+export default class App extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
             count: 0,
-            nodeVersion: 'N/A'
+            nodeVersion: 'N/A',
         };
     }
 
     async componentDidMount() {
         this.setState({
-            nodeVersion: versions.getVersions().node
+            nodeVersion: versions.getVersions().node,
         });
     }
 
@@ -41,8 +31,6 @@ class App extends Component<Props, State> {
 
                 <p>Count: {this.state.count}</p>
                 <button onClick={() => this.setState({ count: this.state.count + 1 })}>Increment</button>
-
-
             </div>
         );
     }
